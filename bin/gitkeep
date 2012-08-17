@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'find'
+require 'gitkeep'
+
+gitkeep = Gitkeep.new
+
+if ARGV.size == 0
+	gitkeep.create(".")
+else
+	if ARGV.size == 1 && ARGV[0] == "-d"
+		gitkeep.dryrun = true
+		gitkeep.create(".")
+	else
+		ARGV.sort.each do |arg|				
+			gitkeep.dryrun = true if arg == "-d"
+			gitkeep.create(arg) unless arg =~ /^-+/
+		end
+	end
+end
