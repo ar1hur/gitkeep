@@ -31,10 +31,9 @@ class Gitkeep
 
 	attr_accessor :dryrun	
 
-	@gitkeep = ".gitkeep"
-
 	def initialize	
-		@dryrun = false			
+		@dryrun = false
+		@filecount = 0			
 	end
 
 	def create(path)		
@@ -56,21 +55,22 @@ class Gitkeep
 		      Find.prune
 		  	else		  		
 					if Dir.entries(p).size == 2
+						@filecount += 1
 						createFile(p)				
 					end
 				end					
 		  end	   		   	   
 		end
 
-		puts "finished!"
+		puts "finished. #{@filecount} files created!"
 	end
 
 	protected
 
 		def createFile(path)
 			gitkeep = "#{path}/.gitkeep"
-			unless File.exists?(gitkeep) 
-				unless @dryrun			
+			unless File.exists?(gitkeep)
+				unless @dryrun								
 					f = File.new(gitkeep, "w+")		
 					f.close			
 					puts green("created #{gitkeep}") 	    	    
