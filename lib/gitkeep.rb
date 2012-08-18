@@ -15,20 +15,23 @@ class Gitkeep
 			return false
 		end		
 
-		puts "creating files..."
+		puts "gitkeep is creating files..."
 
 		ignores = ['.git']
 
 		Find.find(path) do |p|
 		  name = File.basename(p)
 		  if File.directory?(p)
-		    if ignores.include?(name)
-		      Find.prune
-		  	else		  		
-					if Dir.entries(p).size == 2
-						@filecount += 1
-						createFile(p)				
+		  	if File.readable?(p)
+			    if ignores.include?(name)
+			      Find.prune
+			  	else		  		
+						if Dir.entries(p).size == 2
+							createFile(p)				
+						end
 					end
+				else
+					puts red("[error] could not READ in #{p}/ -> check permissions")
 				end					
 		  end	   		   	   
 		end
@@ -40,6 +43,12 @@ class Gitkeep
 
 		def createFile(path)
 			gitkeep = "#{path}/.gitkeep"
+
+			unless File.writable?(path)
+				puts red("[error] could not WRITE in #{path}/ -> check permissions")
+				return false
+			end
+			
 			unless File.exists?(gitkeep)
 				unless @dryrun								
 					f = File.new(gitkeep, "w+")		
@@ -48,7 +57,10 @@ class Gitkeep
 				else
 					puts blue("[dryrun] created #{gitkeep}")
 				end
-			end		
+			end
+
+			@filecount += 1
+
 		end
 
 	private
@@ -60,6 +72,10 @@ class Gitkeep
 		def green(text)
 		  colorize(text, 32)
 		end
+
+		def red(text)
+		  colorize(text, 31)
+		end		
 
 		def blue(text)
 		  colorize(text, 36)
