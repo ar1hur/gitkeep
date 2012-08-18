@@ -14,3 +14,6 @@ create .gitkeep files in all empty directories in your project
     $ gitkeep -d
     or
     $ gitkeep -d some/path
+
+##installation
+see [https://rubygems.org/gems/gitkeep](https://rubygems.org/gems/gitkeep "Title")
