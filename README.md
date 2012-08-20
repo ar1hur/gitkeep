@@ -12,11 +12,11 @@ create .gitkeep files in all empty directories in your project
 -   first release
 
 
-##use
+##usage
     # current path    
     $ gitkeep
     
-    # specified path
+    # with specified path
     $ gitkeep /var/www/myproject
     
     # dryrun - creating of files is disabled but output is shown
