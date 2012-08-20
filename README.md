@@ -1,4 +1,4 @@
-gitkeep
+#gitkeep
 =======
 
 create .gitkeep files in all empty directories in your project
@@ -13,6 +13,7 @@ create .gitkeep files in all empty directories in your project
 
 
 ##usage
+``` shell
     # current path    
     $ gitkeep
     
@@ -21,9 +22,9 @@ create .gitkeep files in all empty directories in your project
     
     # dryrun - creating of files is disabled but output is shown
     $ gitkeep -d
-    or
+    # or
     $ gitkeep -d some/path
-
+```
 
 ##installation
 see [https://rubygems.org/gems/gitkeep](https://rubygems.org/gems/gitkeep "Title")
