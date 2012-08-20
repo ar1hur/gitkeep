@@ -14,16 +14,16 @@ create .gitkeep files in all empty directories in your project
 
 ##usage
 ``` shell
-    # current path    
-    $ gitkeep
-    
-    # with specified path
-    $ gitkeep /var/www/myproject
-    
-    # dryrun - creating of files is disabled but output is shown
-    $ gitkeep -d
-    # or
-    $ gitkeep -d some/path
+# current path    
+$ gitkeep
+
+# with specified path
+$ gitkeep /var/www/myproject
+
+# dryrun - creating of files is disabled but output is shown
+$ gitkeep -d
+# or
+$ gitkeep -d some/path
 ```
 
 ##installation
