@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = 'gitkeep'
-  s.version     = '0.2.1'
+  s.version     = '0.2.2'
   s.executables << 'gitkeep'
-  s.date        = '2012-08-18'
+  s.date        = '2012-08-20'
   s.summary     = "gitkeep"
   s.description = "create .gitkeep files in all empty directories in your project"
   s.authors     = ["Arthur Zielinski"]

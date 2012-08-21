@@ -1,17 +1,23 @@
+require 'find'
+
 class Gitkeep	
 
-	attr_accessor :dryrun	
+	attr_accessor :dryrun, :interactive, :__test
+	attr_reader :file_count, :error_count
 
 	def initialize	
+		@__test = false
 		@dryrun = false
-		@filecount = 0			
+		@interactive = false
+		@file_count = 0	
+		@error_count = 0
 	end
 
 	def create(path)		
 		path = "." if path.empty?
 
 		unless File.directory?(path)
-			puts "error: directory \"#{path}\" not found! abort..."
+			puts red("[error] directory \"#{path}\" not found! abort...")
 			return false
 		end		
 
@@ -27,43 +33,54 @@ class Gitkeep
 			      Find.prune
 			  	else		  		
 						if Dir.entries(p).size == 2
-							createFile(p)				
+							save(p)				
 						end
 					end
 				else
 					puts red("[error] could not READ in #{p}/ -> check permissions")
+					@error_count += 1
 				end					
 		  end	   		   	   
 		end
 
-		puts "finished. #{@filecount} file(s) created!"
+		puts "finished. #{@file_count} file(s) created!"
+		puts red("#{@error_count} error(s)...") if @error_count > 0
+		true if @error_count == 0
 	end
 
-	protected
+	protected if @__test == false
 
-		def createFile(path)
+		def save(path)
 			gitkeep = "#{path}/.gitkeep"
 
 			unless File.writable?(path)
 				puts red("[error] could not WRITE in #{path}/ -> check permissions")
+				@error_count += 1
 				return false
 			end
 			
-			unless File.exists?(gitkeep)
-				unless @dryrun								
-					f = File.new(gitkeep, "w+")		
-					f.close			
-					puts green("created #{gitkeep}") 	    	    
-				else
-					puts blue("[dryrun] created #{gitkeep}")
-				end
+			return true if File.exists?(gitkeep)
+			
+			if @interactive
+				print "create #{gitkeep} ? [Yn]"
+				a = $stdin.gets # read from stdin to avoid collision with params ARGV
+				return false unless a == "\n" || a.downcase == "y\n"
 			end
 
-			@filecount += 1
+			@file_count += 1
 
+			unless @dryrun								
+				f = File.new(gitkeep, "w+")
+				f.close			
+				puts green("created #{gitkeep}")  	    
+				true
+			else
+				puts blue("[dryrun] created #{gitkeep}")
+				nil
+			end				
 		end
 
-	private
+	private if @__test == false
 
 		def colorize(text, color_code)
 		  "\e[#{color_code}m#{text}\e[0m"

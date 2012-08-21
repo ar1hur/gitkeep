@@ -1,20 +1,19 @@
 #!/usr/bin/env ruby
 
-require 'find'
 require 'gitkeep'
 
 gitkeep = Gitkeep.new
 
+# set options
+gitkeep.dryrun = !ARGV.delete('-d').nil?
+gitkeep.interactive = !ARGV.delete('-i').nil?			
+
 if ARGV.size == 0
-	gitkeep.create(".")
+	# no options, create in current path
+	gitkeep.create(".") 
 else
-	if ARGV.size == 1 && ARGV[0] == "-d"
-		gitkeep.dryrun = true
-		gitkeep.create(".")
-	else
-		ARGV.sort.each do |arg|				
-			gitkeep.dryrun = true if arg == "-d"
-			gitkeep.create(arg) unless arg =~ /^-+/
-		end
+	# iterate over paths
+	ARGV.each do |arg|
+		gitkeep.create(arg) unless arg =~ /^-+/
 	end
 end
