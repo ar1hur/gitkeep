@@ -26,7 +26,7 @@ $ gitkeep
 # with specified path
 $ gitkeep /var/www/myproject
 
-# dryrun - creating of files is disabled but output is shown
+# dryrun - doesn't create any files, but you will see in which places gitkeep would create files
 $ gitkeep -d
 # or
 $ gitkeep -d some/path
