@@ -40,7 +40,7 @@ class Gitkeep
 					puts red("[error] could not READ in #{p}/ -> check permissions")
 					@error_count += 1
 				end					
-		  end	   		   	   
+		  end 		   	   
 		end
 
 		puts "finished. #{@file_count} file(s) created!"

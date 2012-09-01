@@ -55,7 +55,7 @@ describe "Gitkeep" do
 	context "with option" do
 
 		context "dryrun" do
-			it "should be not create .gitkeep files when dryrun is active" do
+			it "should be not create .gitkeep files" do
 				@gitkeep.dryrun = true		
 				@gitkeep.save('./testdir/valid').should be_nil
 				File.exists?(@gitkeep_file).should be_false
@@ -64,26 +64,38 @@ describe "Gitkeep" do
 		end
 
 		context "interactive" do
-			it "should ask before creating a file" do
-				@gitkeep.interactive = true
-				pending
+
+			before do
+				@gitkeep.interactive = true	
+			end
+
+			it "should create a file when i want it" do
+				@gitkeep.should_receive(:puts).with(/create/)
+				$stdin.stub!(:gets) { "\n" }
+				@gitkeep.save('./testdir/valid')
 			end
 		end
 
 	end
 
-	context "errors" do
+	context "lack of permissions" do
 
 		it "should display an error if the directory not exists" do
+			@gitkeep.should_receive(:puts).with(/\[error\]/)
 			@gitkeep.create('./some/not/existin/folder').should be_false
 		end  
 
 		it "should throw an error and increment a counter when a directory is not accessible" do
-			@gitkeep.create('./testdir/not_readable').should_not be_true 
+			@gitkeep.should_receive(:puts).with('gitkeep is creating files...').once
+			@gitkeep.should_receive(:puts).with(/\[error\] .+ READ/)
+			@gitkeep.should_receive(:puts).with(/finished/)
+			@gitkeep.should_receive(:puts).with(/error\(s\)/)
+			@gitkeep.create('./testdir/not_readable').should_not be_true
 			@gitkeep.error_count.should be > @error_count
 		end
 
 		it "should throw an error and count it when a file could not be written successfully" do
+			@gitkeep.should_receive(:puts).with(/\[error\] .+ WRITE/)
 			@gitkeep.save('./testdir/not_writeable').should be_false
 			@gitkeep.error_count.should be > @error_count
 		end
