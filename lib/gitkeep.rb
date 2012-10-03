@@ -11,6 +11,8 @@ class Gitkeep
 		@interactive = false
 		@file_count = 0	
 		@error_count = 0
+
+		@@ignores = ['.git']		
 	end
 
 	def create(path)		
@@ -23,13 +25,11 @@ class Gitkeep
 
 		puts "gitkeep is creating files..."
 
-		ignores = ['.git']
-
 		Find.find(path) do |p|
 		  name = File.basename(p)
 		  if File.directory?(p)
 		  	if File.readable?(p)
-			    if ignores.include?(name)
+			    if @@ignores.include?(name)
 			      Find.prune
 			  	else		  		
 						if Dir.entries(p).size == 2
@@ -46,6 +46,30 @@ class Gitkeep
 		puts "finished. #{@file_count} file(s) created!"
 		puts red("#{@error_count} error(s)...") if @error_count > 0
 		true if @error_count == 0
+	end
+
+	def search(path)
+		files = []
+
+		Find.find(path) do |p|
+		  name = File.basename(p)
+			if @@ignores.include?(name)
+		    Find.prune
+		  else		  
+		  	files << p if name == '.gitkeep'
+			end	   	   
+		end
+
+		add_to_index(files)
+	end
+
+	def add_to_index(files)
+		puts "adding files to git index..."
+		puts files
+		files = files.join(' ') if files.kind_of?(Array)
+		`git add -f #{files}`
+		puts green("files were added!") 
+		puts `git status`
 	end
 
 	protected if @__test == false

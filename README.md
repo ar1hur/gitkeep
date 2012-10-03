@@ -4,6 +4,9 @@
 create .gitkeep files in all empty directories in your project
 
 ##changelog
+0.2.3
+-		added -a option to execute git add for adding directories which have a .gitkeep file in there	
+
 0.2.2
 -		added rspec tests
 -		added interactive mode
@@ -33,6 +36,9 @@ $ gitkeep -d some/path
 
 # interactive mode - ask you everytime when gitkeep wants to create a file
 $ gitkeep -i
+
+# after creating .gitkeep files you can add these automatically with -a option to your git index
+$ gitkeep -a
 ```
 
 ##installation

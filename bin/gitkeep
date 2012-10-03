@@ -1,5 +1,14 @@
 #!/usr/bin/env ruby
 
+if !ARGV.delete('-h').nil?
+	put 'gitkeep version 0.2.3'
+	put 'options:'
+	put "-d \t drymode"
+	put "-i \t interactive"
+	put "-a \t adding .gitkeep files to your git index"
+	exit
+end
+
 require 'gitkeep'
 
 gitkeep = Gitkeep.new
@@ -7,6 +16,10 @@ gitkeep = Gitkeep.new
 # set options
 gitkeep.dryrun = !ARGV.delete('-d').nil?
 gitkeep.interactive = !ARGV.delete('-i').nil?			
+if !ARGV.delete('-a').nil?
+	gitkeep.search(".")
+	exit
+end
 
 if ARGV.size == 0
 	# no options, create in current path
