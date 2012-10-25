@@ -13,6 +13,7 @@ describe "Gitkeep" do
 			Dir.mkdir('./testdir/not_readable', 0333)
 			Dir.mkdir('./testdir/dirnot_readable_and_not_writeable', 0000)
 			Dir.mkdir('./testdir/valid')
+			Dir.mkdir('./testdir/.git')
 		end
 
 		@gitkeep_file = './testdir/valid/.gitkeep'
@@ -40,7 +41,7 @@ describe "Gitkeep" do
 
 	end
 
-	context "without options" do
+	context "generally" do
 		
 		it "should create a .gitkeep file in an empty directory and increment a counter" do
 			File.delete(@gitkeep_file) if File.exists?(@gitkeep_file)
@@ -48,6 +49,12 @@ describe "Gitkeep" do
 			@gitkeep.save('./testdir/valid').should be_true
 			File.exists?(@gitkeep_file).should be_true
 			@gitkeep.file_count.should be > @file_count
+		end
+
+		it "should ignore .git directories" do
+			File.exists?('./testdir/.git/.gitkeep').should be_false
+			@gitkeep.create('./testdir')
+			File.exists?('./testdir/.git/.gitkeep').should be_false
 		end
 
 	end
@@ -102,4 +109,3 @@ describe "Gitkeep" do
 
 	end
 end
-

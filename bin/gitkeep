@@ -1,15 +1,15 @@
 #!/usr/bin/env ruby
 
+require 'gitkeep'
+
 if !ARGV.delete('-h').nil?
-	put 'gitkeep version 0.2.3'
-	put 'options:'
-	put "-d \t drymode"
-	put "-i \t interactive"
-	put "-a \t adding .gitkeep files to your git index"
+	puts 'gitkeep version '+Gitkeep::VERSION
+	puts 'options:'
+	puts "-d \t drymode"
+	puts "-i \t interactive"
+	puts "-a \t adding .gitkeep files to your git index"
 	exit
 end
-
-require 'gitkeep'
 
 gitkeep = Gitkeep.new
 

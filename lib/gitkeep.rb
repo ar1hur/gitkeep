@@ -2,8 +2,11 @@ require 'find'
 
 class Gitkeep	
 
+	VERSION = '0.2.4'
 	attr_accessor :dryrun, :interactive, :__test
 	attr_reader :file_count, :error_count
+
+	@@ignores = ['.git']
 
 	def initialize	
 		@__test = false
@@ -11,8 +14,6 @@ class Gitkeep
 		@interactive = false
 		@file_count = 0	
 		@error_count = 0
-
-		@@ignores = ['.git']		
 	end
 
 	def create(path)		
