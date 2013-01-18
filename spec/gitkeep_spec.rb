@@ -62,7 +62,7 @@ describe "Gitkeep" do
 	context "with option" do
 
 		context "dryrun" do
-			it "should be not create .gitkeep files" do
+			it "should not create .gitkeep files" do
 				@gitkeep.dryrun = true		
 				@gitkeep.save('./testdir/valid').should be_nil
 				File.exists?(@gitkeep_file).should be_false
