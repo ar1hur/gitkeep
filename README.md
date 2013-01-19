@@ -6,6 +6,9 @@ Because Git is not able to track empty directories. oO
 For lazy people (like me) i created this tiny gem to create .gitkeep files automatically. JEAH!
 
 ##changelog
+0.2.4
+-       added -h option to show possible options
+
 0.2.3
 -		added -a option to execute git add for adding directories which have a .gitkeep file in there	
 
