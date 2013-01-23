@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ar1hur/gitkeep.png?branch=master)](https://travis-ci.org/ar1hur/gitkeep)
 #gitkeep
 =======
 
