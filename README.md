@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/ar1hur/gitkeep.png?branch=master)](https://travis-ci.org/ar1hur/gitkeep)
-#gitkeep
+#gitkeep (ruby 1.9.3 required)
 =======
 
 People who want to track empty directories in Git, have created the convention of putting files called “.gitkeep” in these directories.
