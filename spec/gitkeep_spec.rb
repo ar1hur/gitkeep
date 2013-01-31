@@ -2,9 +2,10 @@ require 'spec_helper'
 require 'gitkeep'
 
 describe "Gitkeep" do
-
 	before do
 		@gitkeep = Gitkeep.new
+		# stub it to avoid an output in rspec output
+		@gitkeep.stub!(:puts)
 		@gitkeep.__test = true
 
 		unless Dir.exists?('./testdir')
@@ -25,12 +26,11 @@ describe "Gitkeep" do
 	end
 
 	context "before execute any tests" do
-
 		it "should be set in test mode" do
 			@gitkeep.__test.should be_true
 		end
 
-		it "should be not exists a .gitkeepfile in ./test/valid directory" do
+		it "should not exist a .gitkeepfile in ./test/valid directory" do
 			File.exists?(@gitkeep_file).should be_false
 		end
 
@@ -38,11 +38,9 @@ describe "Gitkeep" do
 			@error_count.should be 0
 			@file_count.should be 0
 		end
-
 	end
 
 	context "generally" do
-		
 		it "should create a .gitkeep file in an empty directory and increment a counter" do
 			File.delete(@gitkeep_file) if File.exists?(@gitkeep_file)
 
@@ -56,11 +54,9 @@ describe "Gitkeep" do
 			@gitkeep.create('./testdir')
 			File.exists?('./testdir/.git/.gitkeep').should be_false
 		end
-
 	end
 
 	context "with option" do
-
 		context "dryrun" do
 			it "should not create .gitkeep files" do
 				@gitkeep.dryrun = true		
@@ -71,28 +67,25 @@ describe "Gitkeep" do
 		end
 
 		context "interactive" do
-
 			before do
 				@gitkeep.interactive = true	
 			end
 
-			it "should create a file when i want it" do
+			it "should create a file only if i want it" do
 				@gitkeep.should_receive(:puts).with(/create/)
 				$stdin.stub!(:gets) { "\n" }
 				@gitkeep.save('./testdir/valid')
 			end
 		end
-
 	end
 
 	context "lack of permissions" do
-
-		it "should display an error if the directory not exists" do
+		it "should display an error if the directory does not exist" do
 			@gitkeep.should_receive(:puts).with(/\[error\]/)
 			@gitkeep.create('./some/not/existin/folder').should be_false
 		end  
 
-		it "should throw an error and increment a counter when a directory is not accessible" do
+		it "should throw an error and increment a counter if a directory is not accessible" do
 			@gitkeep.should_receive(:puts).with('gitkeep is creating files...').once
 			@gitkeep.should_receive(:puts).with(/\[error\] .+ READ/)
 			@gitkeep.should_receive(:puts).with(/finished/)
@@ -101,11 +94,10 @@ describe "Gitkeep" do
 			@gitkeep.error_count.should be > @error_count
 		end
 
-		it "should throw an error and count it when a file could not be written successfully" do
+		it "should throw an error and count it if a file could not be written successfully" do
 			@gitkeep.should_receive(:puts).with(/\[error\] .+ WRITE/)
 			@gitkeep.save('./testdir/not_writeable').should be_false
 			@gitkeep.error_count.should be > @error_count
 		end
-
 	end
 end

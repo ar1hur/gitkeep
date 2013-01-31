@@ -1,7 +1,7 @@
 require 'find'
 
 class Gitkeep	
-
+	
 	VERSION = '0.2.4'
 	attr_accessor :dryrun, :interactive, :__test
 	attr_reader :file_count, :error_count
@@ -87,7 +87,7 @@ class Gitkeep
 			return true if File.exists?(gitkeep)
 			
 			if @interactive
-				print "create #{gitkeep} ? [Yn]"
+				puts "create #{gitkeep} ? [Yn]"
 				a = $stdin.gets # read from stdin to avoid collision with params ARGV
 				return false unless a == "\n" || a.downcase == "y\n"
 			end
