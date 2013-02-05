@@ -2,9 +2,9 @@
 #gitkeep (ruby 1.9.3 required)
 =======
 
-People who want to track empty directories in Git, have created the convention of putting files called “.gitkeep” in these directories.
-Because Git is not able to track empty directories. oO
-For lazy people (like me) i created this tiny gem to create .gitkeep files automatically. JEAH!
+People who want to track empty directories in git, have created the convention of putting files called “.gitkeep” in these directories.
+Because git is not able to track empty directories.
+For lazy people (like myself) i have developed this tiny gem which creates .gitkeep files automatically!
 
 ##changelog
 0.2.4
