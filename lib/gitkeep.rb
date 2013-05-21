@@ -2,7 +2,7 @@ require 'find'
 
 class Gitkeep	
 	
-	VERSION = '0.2.4'
+	VERSION = '0.3.0'
 	attr_accessor :dryrun, :interactive, :__test, :autoclean, :deindex
 	attr_reader :file_count, :error_count
 
