@@ -12,7 +12,7 @@ describe "Gitkeep" do
 			Dir.mkdir('./testdir')
 			Dir.mkdir('./testdir/not_writeable', 0555)
 			Dir.mkdir('./testdir/not_readable', 0333)
-			Dir.mkdir('./testdir/dirnot_readable_and_not_writeable', 0000)
+			Dir.mkdir('./testdir/not_readable_and_not_writeable', 0000)
 			Dir.mkdir('./testdir/valid')
 			Dir.mkdir('./testdir/.git')
 			Dir.mkdir('./testdir/valid_with_content')
@@ -46,8 +46,6 @@ describe "Gitkeep" do
 
 	context "generally" do
 		it "should create a .gitkeep file in an empty directory and increment a counter" do
-			File.delete(@gitkeep_file) if File.exists?(@gitkeep_file)
-
 			@gitkeep.create('./testdir/valid').should be_true
 			File.exists?(@gitkeep_file).should be_true
 			@gitkeep.file_count.should be > @file_count
@@ -68,8 +66,11 @@ describe "Gitkeep" do
 
 	context "with option" do
 		context "dryrun" do
+			before do
+				@gitkeep.dryrun = true	
+			end
+
 			it "should not create .gitkeep files" do
-				@gitkeep.dryrun = true		
 				@gitkeep.save('./testdir/valid').should be_nil
 				File.exists?(@gitkeep_file).should be_false
 				@gitkeep.file_count.should be > @file_count
@@ -89,15 +90,18 @@ describe "Gitkeep" do
 		end
 
 		context "autoclean" do
-			it "should remove unneeded gitkeep files" do
-				File.delete(@gitkeep_file_two) if File.exists?(@gitkeep_file_two)
+			some_file = './testdir/valid_with_future_content/foo.txt'
+			before do
+				File.delete(some_file) if File.exists?(some_file)
 
 				@gitkeep.create('./testdir/valid_with_future_content').should be_true
 				File.exists?(@gitkeep_file_two).should be_true
 
 				@gitkeep.autoclean = true
+			end
 
-				File.open('./testdir/valid_with_future_content/foo.txt', "w") {}
+			it "should remove unneeded gitkeep files" do
+				File.open(some_file, "w") {}
 				@gitkeep.create('./testdir/valid_with_future_content')
 				File.exists?(@gitkeep_file_two).should be_false
 			end
