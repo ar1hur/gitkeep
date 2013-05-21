@@ -15,9 +15,13 @@ describe "Gitkeep" do
 			Dir.mkdir('./testdir/dirnot_readable_and_not_writeable', 0000)
 			Dir.mkdir('./testdir/valid')
 			Dir.mkdir('./testdir/.git')
+			Dir.mkdir('./testdir/valid_with_content')
+			Dir.mkdir('./testdir/valid_with_future_content')
+			File.open('./testdir/valid_with_content/foo.txt', "w") {}
 		end
 
 		@gitkeep_file = './testdir/valid/.gitkeep'
+		@gitkeep_file_two = './testdir/valid_with_future_content/.gitkeep'
 
 		File.delete(@gitkeep_file) if File.exists?(@gitkeep_file)
 
@@ -44,7 +48,7 @@ describe "Gitkeep" do
 		it "should create a .gitkeep file in an empty directory and increment a counter" do
 			File.delete(@gitkeep_file) if File.exists?(@gitkeep_file)
 
-			@gitkeep.save('./testdir/valid').should be_true
+			@gitkeep.create('./testdir/valid').should be_true
 			File.exists?(@gitkeep_file).should be_true
 			@gitkeep.file_count.should be > @file_count
 		end
@@ -53,6 +57,12 @@ describe "Gitkeep" do
 			File.exists?('./testdir/.git/.gitkeep').should be_false
 			@gitkeep.create('./testdir')
 			File.exists?('./testdir/.git/.gitkeep').should be_false
+		end
+
+		it "should not create a .gitkeep file if the directory has content" do
+			File.delete('./testdir/valid_with_content/.gitkeep') if File.exists?('./testdir/valid_with_content/.gitkeep')
+			@gitkeep.create('./testdir/valid_with_content').should be_true
+			File.exists?('./testdir/valid_with_content/.gitkeep').should be_false
 		end
 	end
 
@@ -75,6 +85,21 @@ describe "Gitkeep" do
 				@gitkeep.should_receive(:puts).with(/create/)
 				$stdin.stub!(:gets) { "\n" }
 				@gitkeep.save('./testdir/valid')
+			end
+		end
+
+		context "autoclean" do
+			it "should remove uneeded gitkeep files" do
+				File.delete(@gitkeep_file_two) if File.exists?(@gitkeep_file_two)
+
+				@gitkeep.create('./testdir/valid_with_future_content').should be_true
+				File.exists?(@gitkeep_file_two).should be_true
+
+				@gitkeep.autoclean = true
+
+				File.open('./testdir/valid_with_future_content/foo.txt', "w") {}
+				@gitkeep.create('./testdir/valid_with_future_content')
+				File.exists?(@gitkeep_file_two).should be_false
 			end
 		end
 	end
