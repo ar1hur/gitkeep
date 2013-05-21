@@ -7,7 +7,7 @@ Because git is not able to track empty directories.
 For lazy people (like myself) i have developed this tiny gem which creates .gitkeep files automatically!
 
 ##changelog
-0.2.5
+0.3.0
 -   added autoclean method to remove not needed .gitkeep files - THX to Scott(!)
 -   refactored rspec test
 
