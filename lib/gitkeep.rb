@@ -3,7 +3,7 @@ require 'find'
 class Gitkeep	
 	
 	VERSION = '0.2.4'
-	attr_accessor :dryrun, :interactive, :__test
+	attr_accessor :dryrun, :interactive, :__test, :autoclean, :deindex
 	attr_reader :file_count, :error_count
 
 	@@ignores = ['.git']
@@ -12,11 +12,13 @@ class Gitkeep
 		@__test = false
 		@dryrun = false
 		@interactive = false
+		@autoclean = false
+		@deindex = false
 		@file_count = 0	
 		@error_count = 0
 	end
 
-	def create(path)		
+	def create(path)
 		path = "." if path.empty?
 
 		unless File.directory?(path)
@@ -27,21 +29,30 @@ class Gitkeep
 		puts "gitkeep is creating files..."
 
 		Find.find(path) do |p|
-		  name = File.basename(p)
-		  if File.directory?(p)
-		  	if File.readable?(p)
-			    if @@ignores.include?(name)
-			      Find.prune
-			  	else		  		
+			name = File.basename(p)
+			if File.directory?(p)
+				if File.readable?(p)
+					if @@ignores.include?(name)
+						Find.prune
+					else		  		
 						if Dir.entries(p).size == 2
-							save(p)				
+							save(p)
+						end
+
+						if @autoclean && Dir.entries(p).size >= 3
+
+							File.delete("#{p}/.gitkeep")
+
+							if @deindex
+								`git rm -rf #{p}/.gitkeep`
+							end
 						end
 					end
 				else
 					puts red("[error] could not READ in #{p}/ -> check permissions")
 					@error_count += 1
 				end					
-		  end 		   	   
+			end 		   	   
 		end
 
 		puts "finished. #{@file_count} file(s) created!"
@@ -53,11 +64,11 @@ class Gitkeep
 		files = []
 
 		Find.find(path) do |p|
-		  name = File.basename(p)
+			name = File.basename(p)
 			if @@ignores.include?(name)
-		    Find.prune
-		  else		  
-		  	files << p if name == '.gitkeep'
+				Find.prune
+			else		  
+				files << p if name == '.gitkeep'
 			end	   	   
 		end
 
@@ -75,19 +86,19 @@ class Gitkeep
 
 	protected if @__test == false
 
-		def save(path)
-			gitkeep = "#{path}/.gitkeep"
+	def save(path)
+		gitkeep = "#{path}/.gitkeep"
 
-			unless File.writable?(path)
-				puts red("[error] could not WRITE in #{path}/ -> check permissions")
-				@error_count += 1
-				return false
-			end
-			
-			return true if File.exists?(gitkeep)
-			
-			if @interactive
-				puts "create #{gitkeep} ? [Yn]"
+		unless File.writable?(path)
+			puts red("[error] could not WRITE in #{path}/ -> check permissions")
+			@error_count += 1
+			return false
+		end
+
+		return true if File.exists?(gitkeep)
+
+		if @interactive
+			puts "create #{gitkeep} ? [Yn]"
 				a = $stdin.gets # read from stdin to avoid collision with params ARGV
 				return false unless a == "\n" || a.downcase == "y\n"
 			end
@@ -105,21 +116,21 @@ class Gitkeep
 			end				
 		end
 
-	private if @__test == false
+		private if @__test == false
 
 		def colorize(text, color_code)
-		  "\e[#{color_code}m#{text}\e[0m"
+			"\e[#{color_code}m#{text}\e[0m"
 		end
-			
+
 		def green(text)
-		  colorize(text, 32)
+			colorize(text, 32)
 		end
 
 		def red(text)
-		  colorize(text, 31)
+			colorize(text, 31)
 		end		
 
 		def blue(text)
-		  colorize(text, 36)
+			colorize(text, 36)
 		end
-end
+	end
