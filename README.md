@@ -7,17 +7,21 @@ Because git is not able to track empty directories.
 For lazy people (like myself) i have developed this tiny gem which creates .gitkeep files automatically!
 
 ##changelog
+0.2.5
+-   added autoclean method to remove not needed .gitkeep files - THX to Scott(!)
+-   refactored rspec test
+
 0.2.4
--       added -h option to show possible options
+-   added -h option to show possible options
 
 0.2.3
--		added -a option to execute git add for adding directories which have a .gitkeep file in there	
+-	added -a option to execute git add for adding directories which have a .gitkeep file in there	
 
 0.2.2
--		added rspec tests
--		added interactive mode
+-	added rspec test
+-	added interactive mode
 - 	counting errors
--		refactored code
+-	refactored code
 
 0.2.1  
 -   added checks for read/write permissions  
@@ -35,7 +39,7 @@ $ gitkeep
 # with specified path
 $ gitkeep /var/www/myproject
 
-# dryrun - doesn't create any files, but you will see in which places gitkeep would create files
+# dryrun -> doesn't create any files, but you will see in which places gitkeep would create files
 $ gitkeep -d
 # or
 $ gitkeep -d some/path
@@ -45,6 +49,12 @@ $ gitkeep -i
 
 # after creating .gitkeep files you can add these automatically with -a option to your git index
 $ gitkeep -a
+
+# removes unneeded .gitkeep files
+$ gitkeep -ac
+
+# removes unneeded .gitkeep files, also from your git index
+$ gitkeep -acr
 ```
 
 ##installation
