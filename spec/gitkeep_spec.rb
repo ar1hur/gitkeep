@@ -89,7 +89,7 @@ describe "Gitkeep" do
 		end
 
 		context "autoclean" do
-			it "should remove uneeded gitkeep files" do
+			it "should remove unneeded gitkeep files" do
 				File.delete(@gitkeep_file_two) if File.exists?(@gitkeep_file_two)
 
 				@gitkeep.create('./testdir/valid_with_future_content').should be_true
