@@ -2,7 +2,7 @@ require 'find'
 
 class Gitkeep	
 	
-	VERSION = '0.3.0'
+	VERSION = '0.3.2'
 	attr_accessor :dryrun, :interactive, :__test, :autoclean, :deindex
 	attr_reader :file_count, :error_count
 
@@ -40,12 +40,11 @@ class Gitkeep
 						end
 
 						if @autoclean && Dir.entries(p).size >= 3
-
-							File.delete("#{p}/.gitkeep")
-
+							File.delete("#{p}/.gitkeep") if File.exists?("#{p}/.gitkeep")
+								
 							if @deindex
 								`git rm -rf #{p}/.gitkeep`
-							end
+							end					
 						end
 					end
 				else

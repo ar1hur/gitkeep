@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'gitkeep'
-  s.version     = '0.3.0'
+  s.version     = '0.3.2'
   s.executables << 'gitkeep'
   s.date        = '2013-05-21'
   s.summary     = "gitkeep"
